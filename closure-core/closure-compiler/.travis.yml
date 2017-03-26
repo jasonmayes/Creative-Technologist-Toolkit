@@ -1,0 +1,13 @@
+language: java
+jdk:
+  - openjdk7
+  - oraclejdk8
+
+script:
+  - mvn javadoc:javadoc
+  - mvn test
+
+sudo: false
+
+notifications:
+  email: false
