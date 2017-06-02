@@ -63,6 +63,17 @@ goog.scope(function() {
     this.captureMedia_ = false;
     /** @private {boolean} */
     this.webcamStarted_ = false;
+    /** @private {Object} */
+    this.vidOpts_ = {
+      'optional': [
+        {'minWidth': 320},
+        {'minWidth': 640},
+        {'minWidth': 1024},
+        {'minWidth': 1280},
+        {'minWidth': 1920},
+        {'minWidth': 2560},
+      ]
+    };
     /** @private {string} */
     this.pvHidden_ = com.jasonmayes.ctt.polyfills.VisibilityChange.pvHidden;
     /** @private {string} */
@@ -248,11 +259,11 @@ goog.scope(function() {
       if (((Date.now() - this.lastAnalyzeTime_) > this.MIN_ANALYZE_INTERVAL_) &&
           this.pageIsVisible_) {
         try {
-          this.canvas_.width = this.video_.offsetWidth;
-          this.canvas_.height = this.video_.offsetHeight;
+          this.canvas_.width = this.video_.videoWidth;
+          this.canvas_.height = this.video_.videoHeight;
 
-          this.ctx_.drawImage(this.video_, 0, 0, this.video_.offsetWidth,
-              this.video_.offsetHeight);
+          this.ctx_.drawImage(this.video_, 0, 0, this.video_.videoWidth,
+              this.video_.videoHeight);
           this.imgData_ = this.ctx_.getImageData(0, 0, this.canvas_.width,
               this.canvas_.height);
           this.ctx_.putImageData(this.imgData_, 0, 0);
@@ -338,7 +349,7 @@ goog.scope(function() {
         if (this.videoSelect_ !== undefined) {
           this.inputDeviceChanged_();
         } else {
-          navigator.getUserMedia({video: true},
+          navigator.getUserMedia({video: this.vidOpts_},
               this.videoStreamSuccess_.bind(this),
               this.videoStreamError_.bind(this));
         }
